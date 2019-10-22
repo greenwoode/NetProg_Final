@@ -2,7 +2,7 @@
 
 ## Description
 
-Describe briefly what your project is all about.
+Simple NAS type file storage
 
 ## Deliverables
 
@@ -17,5 +17,6 @@ List all the features of your application in the order of priority.
 
 ## Team members
 
-* Roger Federer, Team Lead
-* Tiger Woods, Bug Fixer
+* Ethan Greenwood, Security and Connection 
+* Eddie Lee, File mangement and browsing
+* Xixi Linn, gui and misc.
