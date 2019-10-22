@@ -2,18 +2,18 @@
 
 ## Description
 
-We are trying to build a NAS. This file transfer protocol will have a clear client server. For the file search, we could have an array of file names on the server side and have the client request that first, get it sent back, display it on the GUI, then send the index number back to receive the selected file. We’re also going to try and make it so that when the client is in a folder, he can only see that particular folder’s contents, and when the client goes back, it requests the previous folder.
+Simple NAS type file storage
 
 ## Deliverables
 
-List all the things you want to deliver by the end of the semester.
+Per-user file storage with both upload and download capabilities
 
 ## Features 
-List all the features of your application in the order of priority.
 1. Download
-2. Feature #2
-3. Feature #3 
-...
+2. Upload
+3. File browsing
+4. Diffie-Hellman key exchange
+5. Individual user storage space
 
 ## Team members
 
