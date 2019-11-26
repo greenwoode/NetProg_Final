@@ -1,6 +1,9 @@
 from socket import *
 import threading
 import os
+from tkinter import *
+from tkinter import filedialog
+import tkinter
 
 currentDirectory = ""
 directoryList = []
@@ -211,6 +214,22 @@ while True:
                     clientSocket.send(currentDirectory.encode())
                     printContents(clientSocket)
                     break
+        if command == "upload":
+            fileDir = filedialog.askopenfilename(initialdir="/Desktop", title = "Select a File", filetypes = (("all files","*.*"),))
+            print(fileDir)
+            print(len(fileDir))
+            if len(fileDir) != 0:
+                clientSocket.send("upload".encode())
+                clientSocket.send((currentDirectory+os.path.basename(fileDir)).encode())
+                fileToSend = open(fileDir, 'rb')
+                toSend = fileToSend.read(1024)
+                clientSocket.send(toSend)
+                while (toSend):
+                    toSend = fileToSend.read(1024)
+                    clientSocket.send(toSend)
+                print("Done")
+            else:
+                print("No files sent\n")
 
 
 

@@ -1,4 +1,5 @@
 from socket import *
+
 import threading
 import os.path
 import time
@@ -181,6 +182,19 @@ def clientThread(serverSocket):
                 else:
                     connectionSocket.send("ERROR".encode())
                     connectionSocket.send("File not found".encode())
+            if command == "upload":
+                targetDir = connectionSocket.recv(1024).decode()
+                fileObj = open(os.path.abspath(targetDir), 'wb')
+                while True:
+                    message = connectionSocket.recv(1024)
+                    if (len(message) == 0):
+                        fileObj.close()
+                        print("Done!")
+                        break
+                    fileObj.write(message)
+
+
+
 
 
 
