@@ -4,6 +4,7 @@ import os
 from tkinter import *
 from tkinter import filedialog
 import tkinter
+import time
 
 currentDirectory = ""
 directoryList = []
@@ -129,7 +130,7 @@ while True:
                 fileObj = open((os.path.abspath(os.curdir) + '\\Downloads\\' + file), 'wb')
                 while True:
                     message = clientSocket.recv(1024)
-                    if (message.decode() == "{done}"):
+                    if (len(message) < 1024):
                         fileObj.close()
                         break
                     print(message.decode())
@@ -220,16 +221,19 @@ while True:
             print(len(fileDir))
             if len(fileDir) != 0:
                 clientSocket.send("upload".encode())
-                clientSocket.send((currentDirectory+os.path.basename(fileDir)).encode())
+                fileName = currentDirectory + os.path.basename(fileDir)
+                fileName = fileName.encode()
+                print(fileName)
+                #clientSocket.send((currentDirectory+fileName).encode('utf-8'))
+                clientSocket.send(fileName)
+                time.sleep(0.05)
                 fileToSend = open(fileDir, 'rb')
                 toSend = fileToSend.read(1024)
                 clientSocket.send(toSend)
                 while (toSend):
                     toSend = fileToSend.read(1024)
                     clientSocket.send(toSend)
+                clientSocket.send(fileToSend.read(1024))
                 print("Done")
             else:
                 print("No files sent\n")
-
-
-

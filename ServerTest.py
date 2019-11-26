@@ -183,11 +183,15 @@ def clientThread(serverSocket):
                     connectionSocket.send("ERROR".encode())
                     connectionSocket.send("File not found".encode())
             if command == "upload":
-                targetDir = connectionSocket.recv(1024).decode()
-                fileObj = open(os.path.abspath(targetDir), 'wb')
+
+                fileDir = connectionSocket.recv(1024).decode()
+                print(fileDir)
+                fileObj = open(fileDir, 'wb')
                 while True:
                     message = connectionSocket.recv(1024)
-                    if (len(message) == 0):
+                    print(len(message))
+                    fileObj.write(message)
+                    if len(message) == 0:
                         fileObj.close()
                         print("Done!")
                         break
