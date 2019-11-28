@@ -108,6 +108,7 @@ def clientThread(serverSocket):
             command = connectionSocket.recv(4096).decode()
             if isQuit(command):
                 connectionSocket.close()
+                print("Disconnected")
                 break
             print("Cmd received")
             # Command to get contents of current directory
@@ -138,6 +139,7 @@ def clientThread(serverSocket):
                 if os.path.exists(filePath):
                     connectionSocket.send("auth".encode())
                     contentToSend = open(filePath, 'rb')
+                    connectionSocket.send(str(os.path.getsize(filePath)).encode())
                     toSend = contentToSend.read(1024)
                     connectionSocket.send(toSend)
                     # Sending file
@@ -183,19 +185,24 @@ def clientThread(serverSocket):
                     connectionSocket.send("ERROR".encode())
                     connectionSocket.send("File not found".encode())
             if command == "upload":
-
                 fileDir = connectionSocket.recv(1024).decode()
+                totalSize = int(connectionSocket.recv(1024).decode())
+                bytesRecvd = 0
                 print(fileDir)
+                print(totalSize)
                 fileObj = open(fileDir, 'wb')
                 while True:
-                    message = connectionSocket.recv(1024)
+                    print("Waiting")
+                    message = connectionSocket.recv(4096)
+                    print("Recv'd")
+                    bytesRecvd = bytesRecvd + len(message)
                     print(len(message))
+                    print(bytesRecvd)
                     fileObj.write(message)
-                    if len(message) == 0:
+                    if bytesRecvd >= totalSize:
                         fileObj.close()
                         print("Done!")
                         break
-                    fileObj.write(message)
 
 
 
