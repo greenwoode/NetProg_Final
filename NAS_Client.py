@@ -232,6 +232,11 @@ def upload(clientSocket):
     else:
         print("No files sent\n")
 
+def checkDownloads():
+    downloaddir = os.path.abspath(os.curdir) + "\\Downloads\\"
+    if not os.path.exists(downloaddir):
+        os.makedirs(os.path.dirname(downloaddir))
+
 commands = {
     "getdirectory" : getdirectory,
     "getcontents" : getcontents,
@@ -258,6 +263,10 @@ serverPort = 1592
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName, serverPort))
 
+checkDownloads()
+
+
+
 print("Hello! Enter login to log in to an existing account.")
 print("Enter register to register as a new user.")
 print("Enter quit to exit.")
@@ -271,6 +280,6 @@ while running:
         if command == "register":
             register(clientSocket)
         if command == "quit":
-            quit()
+            quit(clientSocket)
     elif loggedIn[0]:
         runcommand(command, clientSocket)
