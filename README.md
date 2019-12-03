@@ -10,9 +10,11 @@ Per-user file storage with both upload and download capabilities
 
 ## Getting Started
 ### Install
---
+1. Download the two .py files. Server.py and Client.py.
+
 ### Run 
---
+1. Run the Server.py.
+2. Run the Client.py.
 
 ## Features 
 1. Download
