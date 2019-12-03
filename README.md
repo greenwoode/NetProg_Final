@@ -27,3 +27,6 @@ Per-user file storage with both upload and download capabilities
 * Ethan Greenwood, Server
 * Eddie Lee, Client and Server
 * Xi Xi Lin, GUI and Client
+
+## Sources
+https://docs.google.com/document/d/1CpLPx4ZCzlZuWQzoUJ00wctGyWPsafn534AnrwZt2Tg/edit?usp=sharing
