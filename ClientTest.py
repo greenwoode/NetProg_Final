@@ -10,10 +10,14 @@ currentDirectory = [""]
 loggedIn = [False]
 directoryList = []
 username = [""]
+running = True
 
-
+def quit(clientSocket):
+    clientSocket.send("quit".encode())
+    clientSocket.close()
+    running = False
 # For printing contents of directory
-def printContents(clientSocket):
+def printcontents(clientSocket):
     while True:
         msg = clientSocket.recv(4096).decode()
         if msg == "{done}":
@@ -43,7 +47,7 @@ def login(clientSocket):
             print("Current directory: " + currentDirectory[0])
             # Printing current directory item list
             print("Items in directory: ")
-            printContents(clientSocket)
+            printcontents(clientSocket)
         elif reply == "ERROR":
             print(clientSocket.recv(4096).decode())
         else:
@@ -72,13 +76,13 @@ def register(clientSocket):
         clientSocket.send(password.encode())
         print(clientSocket.recv(4096).decode())
 
-def getDirectory():
+def getdirectory():
     print(currentDirectory[0])
 
-def getContents(clientSocket):
+def getcontents(clientSocket):
     clientSocket.send("getContents".encode())
     clientSocket.send(currentDirectory[0].encode())
-    printContents(clientSocket)
+    printcontents(clientSocket)
 
 def folder(clientSocket):
     print("Enter folder to enter:")
@@ -91,7 +95,7 @@ def folder(clientSocket):
     if reply == "auth":
         print("Current Directory: " + currentDirectory[0] + folder + "\\")
         currentDirectory[0] = currentDirectory[0] + folder + "\\"
-        printContents(clientSocket)
+        printcontents(clientSocket)
     # Folder does not exist
     elif reply == "ERROR":
         print(clientSocket.recv(4096).decode())
@@ -124,7 +128,7 @@ def download(clientSocket):
     else:
         print("Unknown error, download")
 
-def makeFolder(clientSocket):
+def makefolder(clientSocket):
     print("Enter folder name:")
     # Input folder name
     name = input()
@@ -141,7 +145,7 @@ def makeFolder(clientSocket):
     else:
         print("Unknown error, makeFolder")
 
-def deleteFolder(clientSocket):
+def deletefolder(clientSocket):
     print("Enter folder name to delete:")
     # Input folder name
     name = input()
@@ -161,7 +165,7 @@ def deleteFolder(clientSocket):
         else:
             print("Unknown Error, deleteFolder")
 
-def deleteFile(clientSocket):
+def deletefile(clientSocket):
     print("Enter file name to delete:")
     # Input file name
     name = input()
@@ -195,7 +199,7 @@ def back(clientSocket):
             print(currentDirectory[0])
             clientSocket.send("getContents".encode())
             clientSocket.send(currentDirectory[0].encode())
-            printContents(clientSocket)
+            printcontents(clientSocket)
             break
 
 def upload(clientSocket):
@@ -228,6 +232,26 @@ def upload(clientSocket):
     else:
         print("No files sent\n")
 
+commands = {
+    "getdirectory" : getdirectory,
+    "getcontents" : getcontents,
+    "folder" : folder,
+    "download" : download,
+    "makefolder": makefolder,
+    "deletefolder": deletefolder,
+    "deletefile": deletefile,
+    "back": back,
+    "upload": upload,
+    "quit" : quit
+}
+
+
+def runcommand(command, clientSocket):
+    try:
+        commands[command](clientSocket)
+    except KeyError:
+        print("Invalid Command")
+
 
 serverName = "localhost"
 serverPort = 1592
@@ -238,7 +262,7 @@ print("Hello! Enter login to log in to an existing account.")
 print("Enter register to register as a new user.")
 print("Enter quit to exit.")
 
-while True:
+while running:
     print("Enter command:")
     command = input()
     if not loggedIn[0]:
@@ -247,36 +271,6 @@ while True:
         if command == "register":
             register(clientSocket)
         if command == "quit":
-            clientSocket.send("quit".encode())
-            break
+            quit()
     elif loggedIn[0]:
-        # Quit command
-        if command == "quit":
-            clientSocket.send("quit".encode())
-            clientSocket.close()
-            break
-        # Printing current directory
-        if command == "getDirectory":
-            getDirectory()
-        # getContents command for fetching list of items in current directory
-        if command == "getContents":
-            getContents(clientSocket)
-        # Going into a folder in current directory
-        if command == "folder":
-            folder(clientSocket)
-        # Download command to download a file in current directory
-        if command == "download":
-            download(clientSocket)
-        # Command to make folder in current directory
-        if command == "makeFolder":
-            makeFolder(clientSocket)
-        # Command to delete existing folder
-        if command == "deleteFolder":
-            deleteFolder(clientSocket)
-        # Command to delete existing file
-        if command == "deleteFile":
-            deleteFile(clientSocket)
-        if command == "back":
-            back(clientSocket)
-        if command == "upload":
-            upload(clientSocket)
+        runcommand(command, clientSocket)
