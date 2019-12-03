@@ -44,7 +44,6 @@ def clientThread(serverSocket):
                     file_object = open(directory, 'rb')
                     # fetching user password to store on variable
                     password = file_object.read(1024).decode()
-                    print(password)
                     connectionSocket.send("auth".encode())
                     msg = connectionSocket.recv(4096).decode()
                     # Receiving password
@@ -55,7 +54,7 @@ def clientThread(serverSocket):
                             loggedIn = True
                             connectionSocket.send("logged in".encode())
                             user = username
-                            print("Logged in")
+                            print(user + "Logged in")
                             folderDir = (os.path.abspath(os.curdir) + '\\UserFolders\\' + username + '\\')
                             # sending user current directory
                             connectionSocket.send(folderDir.encode())
@@ -73,11 +72,8 @@ def clientThread(serverSocket):
                     connectionSocket.send("No such username found.".encode())
             # For registering new users
             elif command == "register":
-                print("In register")
                 # receiving username
                 username = connectionSocket.recv(4096).decode()
-                print("username received")
-                print(username)
                 directory = (os.path.abspath(os.curdir) + '\\Users\\' + username)
                 # If username file exists
                 if os.path.exists(directory):
@@ -85,7 +81,6 @@ def clientThread(serverSocket):
                     connectionSocket.send("Username is already taken.".encode())
                 # If username is not taken
                 else:
-                    print("In else")
                     connectionSocket.send("auth".encode())
                     connectionSocket.send("Username is available.".encode())
                     # Takes in desired pw
@@ -95,7 +90,6 @@ def clientThread(serverSocket):
                     fileObj.write(password.encode())
                     # Creates user folder
                     folderDir = (os.path.abspath(os.curdir) + '\\UserFolders\\' + username + '\\')
-                    print(folderDir)
                     os.makedirs(os.path.dirname(folderDir))
                     if os.path.exists(directory):
                         connectionSocket.send(
@@ -104,21 +98,16 @@ def clientThread(serverSocket):
                     else:
                         connectionSocket.send("Unknown Error".encode())
         if loggedIn:
-            print("waiting")
             command = connectionSocket.recv(4096).decode()
             if isQuit(command):
                 connectionSocket.close()
-                print("Disconnected")
                 break
-            print("Cmd received")
             # Command to get contents of current directory
             if command == "getContents":
-                print("in command getcontents")
                 folderDir = connectionSocket.recv(4096).decode()
                 sendContents(folderDir, connectionSocket)
             # Command to go into folder
             if command == "folder":
-                print("in command folder")
                 folderDir = connectionSocket.recv(4096).decode()
                 # checking for folder directory's existence
                 if os.path.exists(folderDir):
@@ -146,19 +135,16 @@ def clientThread(serverSocket):
                     while (toSend):
                         toSend = contentToSend.read(1024)
                         connectionSocket.send(toSend)
-                    connectionSocket.send("{done}".encode())
+                    contentToSend.close()
                 else:
                     connectionSocket.send("ERROR".encode())
                     connectionSocket.send("File not found".encode())
             # Command to make a folder in current directory
             if command == "makeFolder":
-                print("In makeFolder")
                 folderDir = connectionSocket.recv(4096).decode()
                 if not os.path.exists(folderDir):
-                    print("IN if else")
                     connectionSocket.send("auth".encode())
                     os.makedirs(os.path.dirname(folderDir))
-                    print("Done!")
                 else:
                     connectionSocket.send("ERROR".encode())
                     connectionSocket.send("Folder already exists")
@@ -188,27 +174,26 @@ def clientThread(serverSocket):
                 fileDir = connectionSocket.recv(1024).decode()
                 totalSize = int(connectionSocket.recv(1024).decode())
                 bytesRecvd = 0
-                print(fileDir)
-                print(totalSize)
                 fileObj = open(fileDir, 'wb')
                 while True:
-                    print("Waiting")
                     message = connectionSocket.recv(4096)
-                    print("Recv'd")
                     bytesRecvd = bytesRecvd + len(message)
-                    print(len(message))
-                    print(bytesRecvd)
                     fileObj.write(message)
                     if bytesRecvd >= totalSize:
-                        fileObj.close()
-                        print("Done!")
                         break
+                fileObj.close()
+
+def checkFolders():
+    userdir = os.path.abspath(os.curdir) + "\\Users\\"
+    userfdir = os.path.abspath(os.curdir) + "\\UserFolders\\"
+    if not os.path.exists(userdir):
+        os.makedirs(os.path.dirname(userdir))
+    if not os.path.exists(userfdir):
+        os.makedirs(os.path.dirname(userfdir))
 
 
 
-
-
-
+checkFolders()
 serverPort = 1592
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
