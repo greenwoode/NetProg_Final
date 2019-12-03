@@ -1,1 +1,41 @@
+Globally available command:
 
+-quit
+Usage: Terminates program
+
+Commands available before logging in:
+
+- login
+Usage: Prompts for username, then password if username is valid. After login, rest of the commands will be available.
+
+- register
+Usage: Prompts for new username and password, new username must not already exist in directory. After register, must use login w/ new credentials to log in.
+
+Commands available after logging in:
+
+- getdirectory
+Usage: Prints out the directory of the folder being browsed
+
+-getcontents
+Usage: Prints out the contents of the folder being browsed
+
+- folder
+Usage: Prompts for foldername in current folder to navigate into
+
+- download
+Usage: Prompts for filename in current folder being browsed to download
+
+- makefolder
+Usage: Prompts for name of folder to make in current folder being browsed
+
+- deletefolder
+Usage: Prompts for name of folder to be deleted in current folder being browsed. Must be an empty folder.
+
+- deletefile
+Usage: Prompts for name of file to be deleted in current folder being browsed.
+
+- back
+Usage: Moves into the parent folder of the current folder being browsed. If current folder is the user folder, prints unauthorized msg.
+
+- upload
+Usage: Prompts file explorer to select a file to upload, uploads to current folder being browsed
