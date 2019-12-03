@@ -1,11 +1,9 @@
 # Network-Attached Storage
 
 ## Description
-
 Simple NAS type file storage
 
 ## Deliverables
-
 Per-user file storage with both upload and download capabilities
 
 ## Getting Started
