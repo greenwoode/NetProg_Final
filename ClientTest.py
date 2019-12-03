@@ -264,7 +264,7 @@ print("Enter quit to exit.")
 
 while running:
     print("Enter command:")
-    command = input()
+    command = input().lower()
     if not loggedIn[0]:
         if command == "login":
             login(clientSocket)
