@@ -20,14 +20,12 @@ Per-user file storage with both upload and download capabilities
 1. Download
 2. Upload
 3. File browsing
-4. Diffie-Hellman key exchange
-5. Individual user storage space
+4. Individual user storage space
 
 ## Demo video (50 pts)
 [Link]
 
 ## Team members
-
-* Ethan Greenwood, Security and Connection 
-* Eddie Lee, File mangement and search
-* Xi Xi Lin, File Management and GUI
+* Ethan Greenwood, Server
+* Eddie Lee, Client and Server
+* Xi Xi Lin, GUI and Client
