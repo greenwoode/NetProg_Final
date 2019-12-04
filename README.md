@@ -13,6 +13,9 @@ Per-user file storage with both upload and download capabilities
 ### Run 
 1. Run the ServerTest.py.
 2. Run the ClientTest.py.
+3. First time users need to register with a username and password before they can log in.
+4. Once they are logged in, simply follow the commands in the Command Help file to do what they wish to do, such as making a folder, making a file, upload, download, etc.
+5. Type "quit" (without the quotation marks) to exit out of the client.
 
 ## Features 
 1. Download
