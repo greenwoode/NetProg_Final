@@ -16,7 +16,7 @@ Commands available after logging in:
 - getdirectory
 Usage: Prints out the directory of the folder being browsed
 
--getcontents
+- getcontents
 Usage: Prints out the contents of the folder being browsed
 
 - folder

@@ -74,7 +74,7 @@ def register(clientSocket):
         clientSocket.send(password.encode())
         print(clientSocket.recv(4096).decode())
 
-def getdirectory():
+def getdirectory(clientSocket):
     print(currentDirectory[0])
 
 def getcontents(clientSocket):
