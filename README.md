@@ -21,7 +21,7 @@ Per-user file storage with both upload and download capabilities
 4. Individual user storage space
 
 ## Demo video (50 pts)
-[Link]
+https://www.youtube.com/watch?v=KwoGYtpGj6c
 
 ## Team members
 * Ethan Greenwood, Server
