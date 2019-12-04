@@ -1,18 +1,18 @@
 # Network-Attached Storage
 
 ## Description
-Simple NAS type file storage
+Simple NAS type file storage.
 
 ## Deliverables
-Per-user file storage with both upload and download capabilities
+Per-user file storage with both upload and download capabilities.
 
 ## Getting Started
 ### Install
-1. Download the two .py files. ServerTest.py and ClientTest.py.
+1. Download the two .py files. NAS_Server.py and NAS_Client.py.
 
 ### Run 
-1. Run the ServerTest.py.
-2. Run the ClientTest.py.
+1. Run the NAS_Server.py.
+2. Run the NAS_Client.py.
 3. First time users need to register with a username and password before they can log in.
 4. Once they are logged in, simply follow the commands in the Command Help file to do what they wish to do, such as making a folder, making a file, upload, download, etc.
 5. Type "quit" (without the quotation marks) to exit out of the client.
