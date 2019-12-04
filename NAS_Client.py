@@ -1,7 +1,5 @@
 from socket import *
-import threading
 import os
-from tkinter import *
 from tkinter import filedialog
 import tkinter
 import time
@@ -15,7 +13,7 @@ running = True
 def quit(clientSocket):
     clientSocket.send("quit".encode())
     clientSocket.close()
-    running = False
+    exit(1)
 # For printing contents of directory
 def printcontents(clientSocket):
     while True:
@@ -76,10 +74,11 @@ def register(clientSocket):
         clientSocket.send(password.encode())
         print(clientSocket.recv(4096).decode())
 
-def getdirectory():
+def getdirectory(clientSocket):
     print(currentDirectory[0])
 
 def getcontents(clientSocket):
+    print(currentDirectory[0])
     clientSocket.send("getContents".encode())
     clientSocket.send(currentDirectory[0].encode())
     printcontents(clientSocket)
@@ -119,9 +118,9 @@ def download(clientSocket):
             bytesRecvd = bytesRecvd + len(message)
             fileObj.write(message)
             if (bytesRecvd >= fileSize):
-                fileObj.close()
                 break
         print("Download complete!")
+        fileObj.close()
     # File does not exist
     elif reply == "ERROR":
         print(clientSocket.recv(4096).decode())
@@ -138,7 +137,7 @@ def makefolder(clientSocket):
     reply = clientSocket.recv(4096).decode()
     # Directory is empty, folder created
     if reply == "auth":
-        print("Folder created! It may take a minute for the contents to update.")
+        print("Folder created")
     # Directory already exists
     elif reply == "ERROR":
         print(clientSocket.recv(4096).decode())
@@ -204,26 +203,21 @@ def back(clientSocket):
 
 def upload(clientSocket):
     root = tkinter.Tk()
+    root.withdraw()
     fileDir = filedialog.askopenfilename(initialdir="/Desktop", title="Select a File",
                                          filetypes=(("all files", "*.*"),))
-    root.withdraw()
-    print(fileDir)
-    print(len(fileDir))
     if len(fileDir) != 0:
         clientSocket.send("upload".encode())
         fileName = currentDirectory[0] + os.path.basename(fileDir)
         fileName = fileName.encode()
-        print(fileName)
         clientSocket.send(fileName)
         time.sleep(0.05)
         fileToSend = open(fileDir, 'rb')
         fileSize = str(os.path.getsize(fileDir))
-        print(fileSize)
         clientSocket.send(fileSize.encode())
         time.sleep(0.05)
         toSend = fileToSend.read(4096)
         clientSocket.send(toSend)
-        print(toSend)
         while (toSend):
             time.sleep(0.025)
             toSend = fileToSend.read(4096)
@@ -232,10 +226,16 @@ def upload(clientSocket):
     else:
         print("No files sent\n")
 
-def checkDownloads():
+def checkFolders():
     downloaddir = os.path.abspath(os.curdir) + "\\Downloads\\"
+    userdir = os.path.abspath(os.curdir) + "\\Users\\"
+    userfdir = os.path.abspath(os.curdir) + "\\UserFolders\\"
     if not os.path.exists(downloaddir):
         os.makedirs(os.path.dirname(downloaddir))
+    if not os.path.exists(userdir):
+        os.makedirs(os.path.dirname(userdir))
+    if not os.path.exists(userfdir):
+        os.makedirs(os.path.dirname(userfdir))
 
 commands = {
     "getdirectory" : getdirectory,
@@ -263,7 +263,7 @@ serverPort = 1592
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName, serverPort))
 
-checkDownloads()
+checkFolders()
 
 
 
