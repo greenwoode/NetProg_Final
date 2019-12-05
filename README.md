@@ -31,5 +31,5 @@ https://www.youtube.com/watch?v=KwoGYtpGj6c
 * Eddie Lee, Client and Server
 * Xi Xi Lin, GUI and Client
 
-## Sources
+## References
 https://docs.google.com/document/d/1CpLPx4ZCzlZuWQzoUJ00wctGyWPsafn534AnrwZt2Tg/edit?usp=sharing
