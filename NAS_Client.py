@@ -113,6 +113,7 @@ def download(clientSocket):
         fileObj = open((os.path.abspath(os.curdir) + '\\Downloads\\' + file), 'wb')
         fileSize = int(clientSocket.recv(1024))
         bytesRecvd = 0
+        print("Downloading...\n")
         while True:
             message = clientSocket.recv(1024)
             bytesRecvd = bytesRecvd + len(message)
@@ -216,13 +217,14 @@ def upload(clientSocket):
         fileSize = str(os.path.getsize(fileDir))
         clientSocket.send(fileSize.encode())
         time.sleep(0.05)
+        print("Uploading...\n")
         toSend = fileToSend.read(4096)
         clientSocket.send(toSend)
         while (toSend):
             time.sleep(0.025)
             toSend = fileToSend.read(4096)
             clientSocket.send(toSend)
-        print("Done")
+        print("Upload Complete!")
     else:
         print("No files sent\n")
 
@@ -257,12 +259,19 @@ def runcommand(command, clientSocket):
     except KeyError:
         print("Invalid Command")
 
-
-serverName = "localhost"
-serverPort = 1592
-clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))
-
+connected = False
+while (not connected):
+    try:
+        serverName = input("Enter server IP: ")
+        serverPort = 8088
+        clientSocket = socket(AF_INET, SOCK_STREAM)
+        clientSocket.connect((serverName, serverPort))
+        connected = True
+    except:
+        print("Invalid server address!")
+        arg = input("Try to reconnect? y or anything else: ")
+        if arg != "y":
+            exit(1)
 checkFolders()
 
 
