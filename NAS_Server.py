@@ -22,10 +22,8 @@ def sendContents(directory, connectionSocket):
         # Sending length of list so client knows when to stop recving
         connectionSocket.send((str(len(contents))).encode())
         for x in contents:
-            print(x)
             connectionSocket.send(x.encode())
             time.sleep(0.01)
-    print("sent")
 
 # Def used for login interaction
 def login(connectionSocket):
@@ -48,7 +46,7 @@ def login(connectionSocket):
             if pw == password:
                 connectionSocket.send("logged in".encode())
                 user = username
-                print(user + "Logged in")
+                print(user + " Logged in")
                 folderDir = (os.path.abspath(os.curdir) + '\\UserFolders\\' + username + '\\')
                 # sending user current directory
                 connectionSocket.send(folderDir.encode())
