@@ -15,16 +15,17 @@ def sendContents(directory, connectionSocket):
     contents = os.listdir(directory)
     # Case where directory is empty
     if len(contents) == 0:
+        connectionSocket.send("1".encode())
         connectionSocket.send("Empty".encode())
     else:
         # For loop that sends all the items in the list
+        # Sending length of list so client knows when to stop recving
+        connectionSocket.send((str(len(contents))).encode())
         for x in contents:
             print(x)
             connectionSocket.send(x.encode())
             time.sleep(0.01)
     print("sent")
-    # Sends {done} that is recognized by client indicating the entire list was sent
-    connectionSocket.send("{done}".encode())
 
 # Def used for login interaction
 def login(connectionSocket):
@@ -244,26 +245,30 @@ def clientThread(serverSocket):
     # Creates a new thread that waits for a different client to connect, as this one is taken
     connections = threading.Thread(target=clientThread, args=(serverSocket,), daemon=True)
     connections.start()
-    # Loop waiting for clientside commands
-    while True:
-        # Commands while not logged in
-        if not loggedin:
-            # Command from client
-            command = connectionSocket.recv(4096).decode()
-            if command == "quit":
-                quit(connectionSocket)
-                break
-            if command == "login":
-                # Sets boolean as whatever login returns (True if logged in, False otherwise)
-                loggedin = login(connectionSocket)
-            # For registering new users
-            elif command == "register":
-                register(connectionSocket)
-        if loggedin:
-            # Command from client
-            command = connectionSocket.recv(4096).decode()
-            # Runs def corresponding to command in the dictionary
-            runCommand(command,connectionSocket)
+    try:
+        # Loop waiting for clientside commands
+        while True:
+            # Commands while not logged in
+            if not loggedin:
+                # Command from client
+                command = connectionSocket.recv(4096).decode()
+                if command == "quit":
+                    quit(connectionSocket)
+                    break
+                if command == "login":
+                    # Sets boolean as whatever login returns (True if logged in, False otherwise)
+                    loggedin = login(connectionSocket)
+                # For registering new users
+                elif command == "register":
+                    register(connectionSocket)
+            if loggedin:
+                # Command from client
+                command = connectionSocket.recv(4096).decode()
+                # Runs def corresponding to command in the dictionary
+                runCommand(command,connectionSocket)
+    except:
+        print("Disconnected Client")
+
 
 # Def for checking for folders
 def checkFolders():

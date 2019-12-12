@@ -19,12 +19,12 @@ def quit(clientSocket):
 
 # For printing contents of directory; Used when expecting a list of strings from server
 def printcontents(clientSocket):
-    while True:
+    length = int(clientSocket.recv(1024).decode())
+    while length != 0:
         msg = clientSocket.recv(4096).decode()
-        if msg == "{done}":
-            break
-        else:
-            print(msg)
+        print(msg)
+        length = length - 1
+
 
 # For logging in
 def login(clientSocket):
