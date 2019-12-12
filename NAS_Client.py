@@ -344,22 +344,26 @@ checkFolders()
 print("Hello! Enter login to log in to an existing account.")
 print("Enter register to register as a new user.")
 print("Enter quit to exit.")
-
-# Loop for entering commands to communicate w/ server
-while running:
-    print("Enter command:")
-    # Commands lowercased so any capital combinations would be valid
-    command = input().lower()
-    # Commands before logging in to an account
-    if not loggedIn[0]:
-        if command == "login":
-            login(clientSocket)
-        elif command == "register":
-            register(clientSocket)
-        elif command == "quit":
-            quit(clientSocket)
-        else:
-            print("Invalid Command")
-    # Commands after logging into an account
-    elif loggedIn[0]:
-        runcommand(command, clientSocket)
+try:
+    # Loop for entering commands to communicate w/ server
+    while running:
+        print("Enter command:")
+        # Commands lowercased so any capital combinations would be valid
+        command = input().lower()
+        # Commands before logging in to an account
+        if not loggedIn[0]:
+            if command == "login":
+                login(clientSocket)
+            elif command == "register":
+                register(clientSocket)
+            elif command == "quit":
+                quit(clientSocket)
+            else:
+                print("Invalid Command")
+        # Commands after logging into an account
+        elif loggedIn[0]:
+            runcommand(command, clientSocket)
+except Exception as e:
+    print("Something went wrong!\n")
+    print(str(e))
+    time.sleep(100)
