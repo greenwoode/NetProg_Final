@@ -4,6 +4,7 @@ import socket
 import threading
 import os.path
 import time
+import sys
 
 # Def used to quit/close connection
 def quit(connectionSocket):
@@ -16,16 +17,15 @@ def sendContents(directory, connectionSocket):
     # Case where directory is empty
     if len(contents) == 0:
         connectionSocket.send("1".encode())
+        time.sleep(0.05)
         connectionSocket.send("Empty".encode())
     else:
         # For loop that sends all the items in the list
         # Sending length of list so client knows when to stop recving
         connectionSocket.send((str(len(contents))).encode())
         for x in contents:
-            print(x)
             connectionSocket.send(x.encode())
-            time.sleep(0.01)
-    print("sent")
+            time.sleep(0.05)
 
 # Def used for login interaction
 def login(connectionSocket):
@@ -48,7 +48,7 @@ def login(connectionSocket):
             if pw == password:
                 connectionSocket.send("logged in".encode())
                 user = username
-                print(user + "Logged in")
+                print(user + " Logged in")
                 folderDir = (os.path.abspath(os.curdir) + '\\UserFolders\\' + username + '\\')
                 # sending user current directory
                 connectionSocket.send(folderDir.encode())
@@ -70,6 +70,7 @@ def login(connectionSocket):
         connectionSocket.send("No such username found.".encode())
     # Returns false to set loggedIn to false if not logged in successfully
     return False
+
 
 # Def used for registering new users
 def register(connectionSocket):
@@ -252,6 +253,7 @@ def clientThread(serverSocket):
             if not loggedin:
                 # Command from client
                 command = connectionSocket.recv(4096).decode()
+                print(command)
                 if command == "quit":
                     quit(connectionSocket)
                     break
