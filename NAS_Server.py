@@ -28,50 +28,48 @@ def sendContents(directory, connectionSocket):
 
 # Def used for login interaction
 def login(connectionSocket):
-    try:
-        # Query for username, loops back if username incorrect
-        username = connectionSocket.recv(4096).decode()
-        # Looks for user's data in users folder
-        directory = (os.path.abspath(os.curdir) + '\\Users\\' + username)
-        # User data found
-        if os.path.exists(directory):
-            file_object = open(directory, 'rb')
-            # fetching user password to store on variable
-            password = file_object.read(1024).decode()
-            # Sends client msg that validates username
-            connectionSocket.send("auth".encode())
-            msg = connectionSocket.recv(4096).decode()
-            # Receiving password
-            if msg == "password":
-                pw = connectionSocket.recv(4096).decode()
-                # verifying password is correct
-                if pw == password:
-                    connectionSocket.send("logged in".encode())
-                    user = username
-                    print(user + " Logged in")
-                    folderDir = (os.path.abspath(os.curdir) + '\\UserFolders\\' + username + '\\')
-                    # sending user current directory
-                    connectionSocket.send(folderDir.encode())
-                    # sending user list of items in directory
-                    sendContents(folderDir, connectionSocket)
-                    # Returns true to set loggedIn as true
-                    return True
-                # Incorrect Password Case
-                else:
-                    connectionSocket.send("ERROR".encode())
-                    connectionSocket.send("Incorrect Password.".encode())
-            # Invalid command case
+    # Query for username, loops back if username incorrect
+    username = connectionSocket.recv(4096).decode()
+    # Looks for user's data in users folder
+    directory = (os.path.abspath(os.curdir) + '\\Users\\' + username)
+    # User data found
+    if os.path.exists(directory):
+        file_object = open(directory, 'rb')
+        # fetching user password to store on variable
+        password = file_object.read(1024).decode()
+        # Sends client msg that validates username
+        connectionSocket.send("auth".encode())
+        msg = connectionSocket.recv(4096).decode()
+        # Receiving password
+        if msg == "password":
+            pw = connectionSocket.recv(4096).decode()
+            # verifying password is correct
+            if pw == password:
+                connectionSocket.send("logged in".encode())
+                user = username
+                print(user + " Logged in")
+                folderDir = (os.path.abspath(os.curdir) + '\\UserFolders\\' + username + '\\')
+                # sending user current directory
+                connectionSocket.send(folderDir.encode())
+                # sending user list of items in directory
+                sendContents(folderDir, connectionSocket)
+                # Returns true to set loggedIn as true
+                return True
+            # Incorrect Password Case
             else:
                 connectionSocket.send("ERROR".encode())
-                connectionSocket.send("Invalid arg".encode())
-        # User data not found
+                connectionSocket.send("Incorrect Password.".encode())
+        # Invalid command case
         else:
             connectionSocket.send("ERROR".encode())
-            connectionSocket.send("No such username found.".encode())
-        # Returns false to set loggedIn to false if not logged in successfully
-        return False
-    except Exception as exc:
-        print(sys.exc_info()[0])
+            connectionSocket.send("Invalid arg".encode())
+    # User data not found
+    else:
+        connectionSocket.send("ERROR".encode())
+        connectionSocket.send("No such username found.".encode())
+    # Returns false to set loggedIn to false if not logged in successfully
+    return False
+
 
 # Def used for registering new users
 def register(connectionSocket):
@@ -254,6 +252,7 @@ def clientThread(serverSocket):
             if not loggedin:
                 # Command from client
                 command = connectionSocket.recv(4096).decode()
+                print(command)
                 if command == "quit":
                     quit(connectionSocket)
                     break
@@ -266,6 +265,7 @@ def clientThread(serverSocket):
             if loggedin:
                 # Command from client
                 command = connectionSocket.recv(4096).decode()
+                print(command)
                 # Runs def corresponding to command in the dictionary
                 runCommand(command,connectionSocket)
     except:
